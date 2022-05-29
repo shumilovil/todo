@@ -1,8 +1,10 @@
 import React from "react";
 import type {Task} from '../../redux/modules/tasks/slice'
-import {Card, Divider} from 'antd'
+import {Card, Divider, message} from 'antd'
 import './TaskCard.scss'
-import Controls from "./blocks/Controls/Controls";
+import {DeleteFilled, EditFilled} from "@ant-design/icons";
+import {fetchTasks, removeTask} from "../../redux/modules/tasks/slice";
+import {useAppDispatch} from "../../redux/root";
 
 const formatDate = Intl.DateTimeFormat('en', {
     day: 'numeric',
@@ -12,12 +14,40 @@ const formatDate = Intl.DateTimeFormat('en', {
 
 type Props = {
     task: Task
+    onEdit: (task: Task) => void
 }
-const TaskCard = ({task}: Props) => {
+const TaskCard = ({task, onEdit}: Props) => {
+
+    const dispatch = useAppDispatch()
+
     const {id, title, description, date} = task
 
+    const renderControls = () => {
+
+        const handleEditClick = () => {
+            onEdit(task)
+        }
+
+        const handleDeleteClick = () => {
+            dispatch(removeTask(id))
+                .unwrap()
+                .then(() => {
+                    message.success('Removed successfully')
+                    dispatch(fetchTasks())
+                })
+                .catch(() => message.error('Something went wrong...'))
+        }
+
+        return (
+            <div>
+                <EditFilled className='edit-icon' onClick={handleEditClick}/>
+                <DeleteFilled className='remove-icon' onClick={handleDeleteClick}/>
+            </div>
+        )
+    }
+
     return (
-        <Card className='task-card' title={title} extra={<Controls id={id}/>}>
+        <Card className='task-card' title={title} extra={renderControls()}>
             <div className='task-card__content'>
                 <div className='task-card__date'>
                     {formatDate(new Date(date))}
@@ -31,4 +61,4 @@ const TaskCard = ({task}: Props) => {
     )
 }
 
-export default TaskCard
+export default React.memo(TaskCard)

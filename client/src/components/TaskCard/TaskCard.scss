@@ -24,3 +24,10 @@
     color: #888888;
   }
 }
+
+.edit-icon, .remove-icon {
+  cursor: pointer;
+  & + & {
+    margin-left: 8px;
+  }
+}
