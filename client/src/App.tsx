@@ -1,41 +1,35 @@
-import React, {useEffect} from 'react';
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import superagent from 'superagent';
-// const superagent = require('superagent');
-
-
-// const axios = require('axios').default;
+import {useAppDispatch} from "./redux/root";
+import {fetchTasks, tasksSelector} from './redux/modules/tasks/slice'
+import {Row, Col} from 'antd';
+import {useSelector} from "react-redux";
+import TaskCard from "./components/TaskCard/TaskCard";
 
 
 function App() {
+    const dispatch = useAppDispatch()
 
-    const handleClick = async () => {
+    const tasks = useSelector(tasksSelector)
 
+    useEffect(() => {
+        dispatch(fetchTasks())
+    }, [])
 
-        const res = await superagent.delete('http://localhost:5000/tasks/10')
-        console.log(res)
-
-        return res
-    }
+    // const dispatch = useAppDispatch()
+    // const handleClick = () => {
+    //     dispatch(fetchTasks())
+    // }
 
     return (
         <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo"/>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-                <button onClick={handleClick}>Test</button>
-            </header>
+            <Row justify='center'>
+                <Col span={16}>
+                    {tasks.map((task) => {
+                       return <TaskCard key={task.id} task={task}/>
+                    })}
+                </Col>
+            </Row>
         </div>
     );
 }

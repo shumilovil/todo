@@ -1,47 +1,22 @@
 {
   "list": [
     {
-      "id": 9,
-      "title": "New",
-      "description": "new description"
-    },
-    {
-      "id": 8,
-      "title": "New",
-      "description": "new description"
-    },
-    {
-      "id": 7,
-      "title": "New",
-      "description": "new description"
-    },
-    {
       "id": 6,
       "title": "New",
-      "description": "new description"
-    },
-    {
-      "id": 5
-    },
-    {
-      "id": 4
+      "description": "new description",
+      "date": "2022-05-29T16:11:03.758Z"
     },
     {
       "id": 3,
       "title": "Visit parents",
-      "description": "Bue a ticket for train",
-      "date": ""
+      "description": "Buy a ticket for train Buy a ticket for train Buy a ticket for train Buy a ticket for train Buy a ticket for train Buy a ticket for train Buy a ticket for train Buy a ticket for train Buy a ticket for train Buy a ticket for train",
+      "date": "2022-05-29T16:11:03.758Z"
     },
     {
       "id": 1,
       "title": "Buy products",
-      "description": "Bue products for a week",
-      "date": ""
-    },
-    {
-      "id": 11,
-      "title": "New",
-      "description": "new description"
+      "description": "Buy products for a week",
+      "date": "2022-05-29T16:11:03.758Z"
     }
   ]
 }

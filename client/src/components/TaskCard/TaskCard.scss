@@ -1,0 +1,26 @@
+.task-card {
+  border-radius: 4px;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 0 1px 0 rgba(0, 0, 0, 0.2);
+
+  & + & {
+    margin-top: 16px;
+  }
+
+  &__content {
+    display: flex;
+  }
+
+  &__date {
+    white-space: nowrap;
+  }
+
+  &__divider {
+    height: auto;
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  &__description {
+    color: #888888;
+  }
+}
