@@ -11,7 +11,7 @@ app.get('/tasks', (req, res) => {
     try {
         fs.readFile('db.json', 'utf8', (err, data) => {
             const taskList = JSON.parse(data).list;
-            res.status(201).json(taskList);
+            res.status(200).json(taskList);
         })
 
     } catch (error) {
@@ -38,7 +38,7 @@ app.post('/tasks', (req, res) => {
     }
 })
 
-app.patch('/tasks/:id', (req, res) => {
+app.put('/tasks/:id', (req, res) => {
     try {
         fs.readFile('db.json', 'utf8', (err, data) => {
             const taskList = JSON.parse(data).list;
@@ -69,7 +69,7 @@ app.delete('/tasks/:id', (req, res) => {
             const taskListAfterDelete = taskList.filter((task) => task.id !== idToDelete)
             const newJsonContent = JSON.stringify({list: taskListAfterDelete})
             fs.writeFile('db.json', newJsonContent, () => {
-                res.status(201).json({message: 'deleted'});
+                res.status(200).json({message: 'deleted'});
             });
         })
 

@@ -34,7 +34,7 @@ export const removeTask = createAsyncThunk('removeTask', async (id: Task["id"]) 
 })
 
 export const updateTask = createAsyncThunk('saveTask', async ({id, title, description, date}: Task) => {
-    const {body} = await superagent.patch(`/tasks/${id}`).send({title, description, date})
+    const {body} = await superagent.put(`/tasks/${id}`).send({title, description, date})
     return body
 })
 
