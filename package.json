@@ -6,7 +6,7 @@
     "start-server": "cd backend && npm start && cd ..",
     "install-client-deps": "cd client && npm i && cd ..",
     "start-client": "cd client && npm start && cd ..",
-    "start-todo": "npm i && concurrently \"npm run install-server-deps && npm run start-server\" \" npm run install-client-deps && npm run start-client\""
+    "todo": "npm i && concurrently \"npm run install-server-deps && npm run start-server\" \" npm run install-client-deps && npm run start-client\""
   },
   "author": "Ilya Shumilov",
   "license": "ISC",
