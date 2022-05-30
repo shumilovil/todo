@@ -49,6 +49,7 @@ const TaskList = () => {
                 placeholder='search by title'
                 value={searchInputValue}
                 onChange={handleSearchChange}
+                allowClear={true}
             />
             {taskNodes}
             <TaskModal
