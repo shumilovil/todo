@@ -24,7 +24,7 @@ app.post('/tasks', (req, res) => {
         fs.readFile('db.json', 'utf8', (err, data) => {
             const taskList = JSON.parse(data).list;
             const sortedList = taskList.sort((a, b) => b.id - a.id)
-            const lastId = sortedList[0]?.id || 1
+            const lastId = sortedList[0]?.id || 0
             const {title, description, date} = req.body
 
             taskList.push({id: lastId + 1, title, description, date})
