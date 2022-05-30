@@ -24,10 +24,13 @@ app.post('/tasks', (req, res) => {
         fs.readFile('db.json', 'utf8', (err, data) => {
             const taskList = JSON.parse(data).list;
             const sortedList = taskList.sort((a, b) => b.id - a.id)
-            const lastId = sortedList[0].id
+            const lastId = sortedList[0]?.id || 1
             const {title, description, date} = req.body
+
             taskList.push({id: lastId + 1, title, description, date})
+
             const newJsonContent = JSON.stringify({list: taskList})
+
             fs.writeFile('db.json', newJsonContent, () => {
                 res.status(201).json({message: 'added'});
             });
@@ -45,11 +48,13 @@ app.put('/tasks/:id', (req, res) => {
             const idToUpdate = Number(req.params.id)
             const taskToUpdate = taskList.find(task => task.id === idToUpdate)
             const {title, description, date} = req.body
+
             taskToUpdate.title = title
             taskToUpdate.description = description
             taskToUpdate.date = date
 
             const newJsonContent = JSON.stringify({list: taskList})
+
             fs.writeFile('db.json', newJsonContent, () => {
                 res.status(201).json({message: 'updated'});
             });
@@ -68,6 +73,7 @@ app.delete('/tasks/:id', (req, res) => {
             const idToDelete = Number(req.params.id)
             const taskListAfterDelete = taskList.filter((task) => task.id !== idToDelete)
             const newJsonContent = JSON.stringify({list: taskListAfterDelete})
+
             fs.writeFile('db.json', newJsonContent, () => {
                 res.status(200).json({message: 'deleted'});
             });
