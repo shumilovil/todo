@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Modal, Input, DatePicker, DatePickerProps, message} from "antd";
+import type {RangePickerProps} from 'antd/es/date-picker';
 import {addTask, fetchTasks, Task, updateTask} from "../../redux/modules/tasks/slice";
 import moment from 'moment';
 import './TaskModal.scss'
@@ -22,15 +23,19 @@ const TaskModal = ({taskToEdit, isModalOpen, onOk, onCancel}: Props) => {
     const [titleValue, setTitleValue] = useState<string>('')
     const [descriptionValue, setDescriptionValue] = useState<string>('')
 
+    const isEditMode = !!taskToEdit;
+
+    const {id, title, date, description} = taskToEdit || {}
+
     const resetForm = () => {
         setDatePickerValue(null)
         setTitleValue('')
         setDescriptionValue('')
     }
 
-    const isEditMode = !!taskToEdit;
-
-    const {id, title, date, description} = taskToEdit || {}
+    const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+        return current && current < moment().startOf('day');
+    };
 
     // initial modal values if in edit mode
     useEffect(() => {
@@ -96,7 +101,11 @@ const TaskModal = ({taskToEdit, isModalOpen, onOk, onCancel}: Props) => {
         >
             <div className='input-block'>
                 <h3>Due date</h3>
-                <DatePicker onChange={handleDateSelect} value={datePickerValue} allowClear={false}/>
+                <DatePicker
+                    onChange={handleDateSelect}
+                    value={datePickerValue}
+                    allowClear={false}
+                    disabledDate={disabledDate}/>
             </div>
             <div className='input-block'>
                 <h3>Title</h3>
