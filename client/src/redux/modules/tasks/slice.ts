@@ -33,6 +33,16 @@ export const removeTask = createAsyncThunk('removeTask', async (id: Task["id"]) 
     return body
 })
 
+export const updateTask = createAsyncThunk('saveTask', async ({id, title, description, date}: Task) => {
+    const {body} = await superagent.patch(`/tasks/${id}`).send({title, description, date})
+    return body
+})
+
+export const addTask = createAsyncThunk('addTask', async ({title, description, date}: Omit<Task, 'id'>) => {
+    const {body} = await superagent.post('/tasks').send({title, description, date})
+    return body
+})
+
 export const tasksReducer = createReducer<TasksState>(initialState, (builder) => {
     builder
         .addCase(fetchTasks.pending, (state) => {

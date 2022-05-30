@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {Modal, Input, DatePicker, DatePickerProps} from "antd";
-import {Task} from "../../redux/modules/tasks/slice";
+import {Modal, Input, DatePicker, DatePickerProps, message} from "antd";
+import {addTask, fetchTasks, Task, updateTask} from "../../redux/modules/tasks/slice";
 import moment from 'moment';
 import './TaskModal.scss'
+import {useAppDispatch} from "../../redux/root";
 
 const {TextArea} = Input
 
 type Props = {
-    taskToEdit: Task | null
+    taskToEdit?: Task | null
     isModalOpen: boolean
     onOk: () => void
     onCancel: () => void
@@ -15,50 +16,103 @@ type Props = {
 
 const TaskModal = ({taskToEdit, isModalOpen, onOk, onCancel}: Props) => {
 
+    const dispatch = useAppDispatch()
+
     const [datePickerValue, setDatePickerValue] = useState<moment.Moment | null>(null)
+    const [titleValue, setTitleValue] = useState<string>('')
+    const [descriptionValue, setDescriptionValue] = useState<string>('')
+
+    const resetForm = () => {
+        setDatePickerValue(null)
+        setTitleValue('')
+        setDescriptionValue('')
+    }
 
     const isEditMode = !!taskToEdit;
 
-    const {title, date} = taskToEdit || {}
+    const {id, title, date, description} = taskToEdit || {}
 
-    const handleDateSelect: DatePickerProps['onChange'] = (date, dateString) => {
-        console.log({date, dateString});
-        setDatePickerValue(moment(date))
-    };
-
-    // initial datepicker value
+    // initial modal values if in edit mode
     useEffect(() => {
-        if (date) {
+        if (isEditMode) {
             setDatePickerValue(moment(date))
+            setTitleValue(title!)
+            setDescriptionValue(description!)
+        } else {
+            setDatePickerValue(moment())
         }
     }, [isModalOpen, taskToEdit])
 
-    // console.log({moment: moment(date)})
+    const handleDateSelect: DatePickerProps['onChange'] = (date) => {
+        setDatePickerValue(moment(date))
+    };
+
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTitleValue(e.target.value)
+    }
+
+    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setDescriptionValue(e.target.value)
+    }
+
+    const handleSuccess = (successMessage: string) => {
+        message.success(successMessage)
+        resetForm()
+        dispatch(fetchTasks())
+    }
+
+    const handleSave = () => {
+        onOk()
+        if (isEditMode) {
+            dispatch(updateTask({
+                id: id!,
+                date: datePickerValue?.toDate()!,
+                title: titleValue,
+                description: descriptionValue
+            }))
+                .unwrap()
+                .then(() => handleSuccess('Updated successfully'))
+                .catch(() => message.error('Something went wrong...'))
+        } else {
+            dispatch(addTask({
+                date: datePickerValue?.toDate()!,
+                title: titleValue,
+                description: descriptionValue
+            }))
+                .unwrap()
+                .then(() => handleSuccess('Added successfully'))
+                .catch(() => message.error('Something went wrong...'))
+        }
+    }
 
     return (
         <Modal
             visible={isModalOpen}
             title={isEditMode ? `Edit '${title}' task` : 'Add a new task'}
             okText='Save'
-            onOk={onOk}
+            onOk={handleSave}
             onCancel={onCancel}
+            destroyOnClose={true}
         >
             <div className='input-block'>
                 <h3>Due date</h3>
-                <DatePicker onChange={handleDateSelect} value={datePickerValue}/>
+                <DatePicker onChange={handleDateSelect} value={datePickerValue} allowClear={false}/>
             </div>
             <div className='input-block'>
                 <h3>Title</h3>
-                <Input placeholder="title"/>
+                <Input placeholder="title" value={titleValue} onChange={handleTitleChange}/>
             </div>
-           <div className='input-block'>
-               <h3>Description</h3>
-               <TextArea rows={4} placeholder="Description"/>
-           </div>
-
-
+            <div className='input-block'>
+                <h3>Description</h3>
+                <TextArea
+                    rows={4}
+                    placeholder="Description"
+                    value={descriptionValue}
+                    onChange={handleDescriptionChange}
+                />
+            </div>
         </Modal>
     )
 }
 
-export default TaskModal
+export default React.memo(TaskModal)

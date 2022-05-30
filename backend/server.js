@@ -19,20 +19,6 @@ app.get('/tasks', (req, res) => {
     }
 })
 
-// app.get('/tasks/:id', (req, res) => {
-//     try {
-//         fs.readFile('db.json', 'utf8', (err, data) => {
-//             const taskList = JSON.parse(data).list;
-//             const id = Number(req.params.id)
-//             const task = taskList.find((task) => task.id === id)
-//             res.status(201).json(task);
-//         })
-//
-//     } catch (error) {
-//         res.status(500).json({message: 'Something is wrong, try again'});
-//     }
-// })
-
 app.post('/tasks', (req, res) => {
     try {
         fs.readFile('db.json', 'utf8', (err, data) => {
@@ -58,9 +44,10 @@ app.patch('/tasks/:id', (req, res) => {
             const taskList = JSON.parse(data).list;
             const idToUpdate = Number(req.params.id)
             const taskToUpdate = taskList.find(task => task.id === idToUpdate)
-            const {} = req.body
-            taskToUpdate.title = req.body.title
-            taskToUpdate.description = req.body.description
+            const {title, description, date} = req.body
+            taskToUpdate.title = title
+            taskToUpdate.description = description
+            taskToUpdate.date = date
 
             const newJsonContent = JSON.stringify({list: taskList})
             fs.writeFile('db.json', newJsonContent, () => {
