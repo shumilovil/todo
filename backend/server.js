@@ -11,7 +11,8 @@ app.get('/tasks', (req, res) => {
     try {
         fs.readFile('db.json', 'utf8', (err, data) => {
             const taskList = JSON.parse(data).list;
-            res.status(200).json(taskList);
+            const sortedTaskList = taskList.sort((a, b) => b.id - a.id)
+            res.status(200).json(sortedTaskList);
         })
 
     } catch (error) {
