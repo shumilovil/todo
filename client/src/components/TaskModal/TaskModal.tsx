@@ -37,7 +37,7 @@ const TaskModal = ({taskToEdit, isModalOpen, onOk, onCancel}: Props) => {
         return current && current < moment().startOf('day');
     };
 
-    // initial modal values if in edit mode
+    // initial modal values for the edit mode
     useEffect(() => {
         if (isEditMode) {
             setDatePickerValue(moment(date))

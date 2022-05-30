@@ -17,7 +17,7 @@ const TaskList = () => {
     const tasks = useSelector(tasksSelector)
 
     const tasksToRender = searchInputValue
-        ? tasks.filter((task) => task.title.includes(searchInputValue))
+        ? tasks.filter((task) => task.title.toLowerCase().includes(searchInputValue.toLowerCase()))
         : tasks
 
     const taskNodes = tasksToRender.map((task) => {
