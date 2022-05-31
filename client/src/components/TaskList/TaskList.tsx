@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {fetchTasks, tasksSelector} from "../../redux/modules/tasks/slice";
 import {useAppDispatch} from "../../redux/root";
-import {Button, Input} from "antd";
+import {Button, Input, Spin} from "antd";
 import './TaskList.scss'
 import TaskModal from "../TaskModal/TaskModal";
 
@@ -14,7 +14,15 @@ const TaskList = () => {
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
     const [searchInputValue, setSearchInputValue] = useState('')
 
-    const tasks = useSelector(tasksSelector)
+    const {tasks, isLoading} = useSelector(tasksSelector)
+
+    useEffect(() => {
+        dispatch(fetchTasks())
+    }, [])
+
+    if (isLoading && !tasks.length) {
+        return <div className='spinner'><Spin /></div>
+    }
 
     const tasksToRender = searchInputValue
         ? tasks.filter((task) => task.title.toLowerCase().includes(searchInputValue.toLowerCase()))
@@ -23,10 +31,6 @@ const TaskList = () => {
     const taskNodes = tasksToRender.map((task) => {
         return <TaskCard key={task.id} task={task}/>
     })
-
-    useEffect(() => {
-        dispatch(fetchTasks())
-    }, [])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInputValue(e.target.value)

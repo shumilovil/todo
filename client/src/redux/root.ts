@@ -3,7 +3,9 @@ import {useDispatch} from 'react-redux'
 import {tasksReducer} from "./modules/tasks/slice";
 
 const store = configureStore({
-    reducer: tasksReducer,
+    reducer: {
+        tasks: tasksReducer
+    },
 })
 export type RootState = ReturnType<typeof store.getState>
 
